@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+
+    <persistence-unit name="objectdbPU" transaction-type="RESOURCE_LOCAL">
+        <provider>com.objectdb.jpa.Provider</provider>
+
+        <class>user.User</class>
+        <class>pelicula.Pelicula</class>
+        <class>copiaPelicula.CopiaPelicula</class>
+
+        <properties>
+            <!-- ObjectDB a veces requiere la propiedad específica sin prefijo javax/jakarta o ambas -->
+            <property name="javax.persistence.jdbc.url" value="objectdb:db/ad.odb" />
+            <property name="javax.persistence.jdbc.user" value="admin" />
+            <property name="javax.persistence.jdbc.password" value="admin" />
+            
+            <!-- Propiedad alternativa para asegurar que ObjectDB la lea -->
+            <property name="objectdb.connection.path" value="db/ad.odb"/>
+        </properties>
+    </persistence-unit>
+</persistence>

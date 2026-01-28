@@ -1,0 +1,30 @@
+.vBox {
+    -fx-background-color: radial-gradient(center 50% 50%, radius 80%, #9db4e3, #1A202C);
+    -fx-padding: 40px;
+    -fx-alignment: center;
+    -fx-spacing: 15px;
+}
+
+.label {
+    -fx-text-fill: #000000; /* Texto de color gris claro */
+}
+
+.text-field {
+    -fx-background-color: #4A5568; /* Fondo del campo de texto */
+    -fx-text-fill: #FFFFFF;           /* Texto blanco */
+    -fx-prompt-text-fill: #A0AEC0;   /* Color del texto de ayuda (prompt) */
+    -fx-background-radius: 5;         /* Bordes redondeados */
+    -fx-border-color: #718096;
+    -fx-border-radius: 5;
+}
+
+.button {
+    -fx-background-color: #4299E1; /* Fondo azul */
+    -fx-text-fill: #FFFFFF;           /* Texto blanco */
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+}
+
+.button:hover {
+    -fx-background-color: #2B6CB0; /* Azul más oscuro al pasar el ratón */
+}
