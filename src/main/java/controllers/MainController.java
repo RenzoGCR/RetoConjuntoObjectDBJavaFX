@@ -20,6 +20,13 @@ import session.SimpleSessionService;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controlador principal de la aplicación.
+ * <p>
+ * Gestiona la vista principal donde se muestra el catálogo de películas y los alquileres del usuario.
+ * Controla la navegación hacia otras vistas (detalles, añadir película) y las acciones de alquiler y devolución.
+ * </p>
+ */
 public class MainController implements Initializable {
     @FXML private Button btnEliminar, btnAlquilar;
     @FXML private Menu menuAdmin;
@@ -38,6 +45,17 @@ public class MainController implements Initializable {
     private final SimpleSessionService sessionService = new SimpleSessionService();
     private final UserService userService = new UserService();
 
+    /**
+     * Inicializa el controlador principal.
+     * <p>
+     * Verifica la sesión del usuario, carga sus datos y dependencias (copias alquiladas),
+     * configura las tablas y refresca la interfaz. Si la carga de dependencias falla,
+     * intenta continuar con una funcionalidad limitada.
+     * </p>
+     *
+     * @param url            La ubicación utilizada para resolver rutas relativas.
+     * @param resourceBundle Los recursos utilizados para la localización.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         User tempUser = sessionService.getActive();
@@ -65,6 +83,13 @@ public class MainController implements Initializable {
         refrescarInterfaz();
     }
 
+    /**
+     * Configura las columnas de las tablas de catálogo y alquileres.
+     * <p>
+     * Define cómo se obtienen los valores de las celdas a partir de los objetos {@link Pelicula} y {@link CopiaPelicula}.
+     * Incluye protecciones contra valores nulos.
+     * </p>
+     */
     private void configurarTablas() {
         // Configurar catálogo
         colCatTitulo.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTitulo()));
@@ -102,6 +127,13 @@ public class MainController implements Initializable {
         });
     }
 
+    /**
+     * Actualiza los datos mostrados en la interfaz.
+     * <p>
+     * Recarga la lista de películas del catálogo y la copia alquilada por el usuario actual.
+     * Ajusta la visibilidad de los botones y menús según si el usuario es administrador.
+     * </p>
+     */
     private void refrescarInterfaz() {
         if (currentUser == null) return;
 
@@ -133,6 +165,14 @@ public class MainController implements Initializable {
         if (btnAlquilar != null) btnAlquilar.setVisible(!isAdmin);
     }
 
+    /**
+     * Maneja la acción de alquilar una película seleccionada.
+     * <p>
+     * Asigna una copia disponible de la película al usuario actual.
+     * </p>
+     *
+     * @param event El evento de acción.
+     */
     @FXML
     void alquilarPelicula(ActionEvent event) {
         Pelicula sel = tablaCatalogo.getSelectionModel().getSelectedItem();
@@ -149,6 +189,14 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Maneja la acción de eliminar una película (solo administradores).
+     * <p>
+     * Elimina la película seleccionada y sus copias de la base de datos.
+     * </p>
+     *
+     * @param event El evento de acción.
+     */
     @FXML
     void eliminarPelicula(ActionEvent event) {
         Pelicula sel = tablaCatalogo.getSelectionModel().getSelectedItem();
@@ -159,16 +207,38 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Cierra la sesión del usuario actual y vuelve a la pantalla de login.
+     *
+     * @param e El evento de acción.
+     */
     @FXML void cerrarSesion(ActionEvent e) {
         sessionService.logout();
         JavaFXUtil.setScene("/login-view.fxml");
     }
 
+    /**
+     * Cierra la aplicación.
+     *
+     * @param e El evento de acción.
+     */
     @FXML void salir(ActionEvent e) { System.exit(0); }
 
+    /**
+     * Navega a la vista para añadir una nueva película.
+     *
+     * @param e El evento de acción.
+     */
     @FXML void añadirPelicula(ActionEvent e) {
         JavaFXUtil.setScene("/newFilmForm-view.fxml");
     }
+    
+    /**
+     * Configura los eventos de interacción con la tabla del catálogo.
+     * <p>
+     * Habilita el doble clic sobre una fila para ver los detalles de la película.
+     * </p>
+     */
     private void configurarEventosTabla() {
         // Detectar doble clic en la tabla del catálogo
         tablaCatalogo.setRowFactory(tv -> {
@@ -182,6 +252,12 @@ public class MainController implements Initializable {
             return row;
         });
     }
+
+    /**
+     * Navega a la vista de detalles de la película seleccionada.
+     *
+     * @param pelicula La película a visualizar.
+     */
     private void verDetallePelicula(Pelicula pelicula) {
         if (pelicula != null) {
             // Guardamos la película en la sesión para que DetailController la pueda leer

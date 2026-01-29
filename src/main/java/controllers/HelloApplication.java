@@ -7,8 +7,30 @@ import session.JPAUtil;
 import utils.JavaFXUtil;
 import java.io.IOException;
 
+/**
+ * Clase principal de la aplicación JavaFX que extiende de {@link Application}.
+ * <p>
+ * Esta clase se encarga de iniciar la aplicación, configurar el escenario principal (Stage),
+ * cargar la vista inicial (Login) y gestionar el ciclo de vida de la aplicación,
+ * incluyendo la inicialización de datos de prueba y el cierre de conexiones.
+ * </p>
+ */
 public class HelloApplication extends Application {
 
+    /**
+     * Método de inicio de la aplicación JavaFX.
+     * <p>
+     * Se ejecuta al lanzar la aplicación. Realiza las siguientes tareas:
+     * <ol>
+     *     <li>Llama a {@link #seedData()} para verificar y poblar la base de datos si es necesario.</li>
+     *     <li>Inicializa la utilidad {@link JavaFXUtil} con el escenario principal.</li>
+     *     <li>Carga y muestra la vista de inicio de sesión (login-view.fxml).</li>
+     * </ol>
+     * </p>
+     *
+     * @param stage El escenario principal (Stage) proporcionado por el runtime de JavaFX.
+     * @throws IOException Si ocurre un error al cargar el archivo FXML.
+     */
     @Override
     public void start(Stage stage) throws IOException {
         // 1. Inicializamos los datos antes de cargar la interfaz
@@ -22,6 +44,20 @@ public class HelloApplication extends Application {
         JavaFXUtil.setScene("/login-view.fxml");
     }
 
+    /**
+     * Método auxiliar para poblar la base de datos con datos iniciales de prueba.
+     * <p>
+     * Verifica si existen usuarios en la base de datos. Si la base de datos está vacía (0 usuarios),
+     * crea e inserta:
+     * <ul>
+     *     <li>Un usuario administrador (admin1 / root).</li>
+     *     <li>Un usuario normal (user1 / 1234).</li>
+     *     <li>Una película de ejemplo ("Inception").</li>
+     *     <li>Una copia disponible para dicha película.</li>
+     * </ul>
+     * Utiliza una transacción JPA para asegurar la atomicidad de la operación.
+     * </p>
+     */
     private void seedData() {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -80,12 +116,24 @@ public class HelloApplication extends Application {
         }
     }
 
+    /**
+     * Método llamado automáticamente cuando la aplicación se detiene.
+     * <p>
+     * Se encarga de cerrar la factoría de EntityManagers de JPA (ObjectDB)
+     * para liberar los recursos de la base de datos de forma ordenada.
+     * </p>
+     */
     @Override
     public void stop() {
         JPAUtil.shutdown();
         System.out.println("Conexión con ObjectDB cerrada.");
     }
 
+    /**
+     * Punto de entrada principal de la aplicación Java.
+     *
+     * @param args Argumentos de la línea de comandos.
+     */
     public static void main(String[] args) {
         launch();
     }

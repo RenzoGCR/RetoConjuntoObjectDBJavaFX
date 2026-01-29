@@ -8,8 +8,21 @@ import utils.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repositorio para la entidad {@link User}.
+ * <p>
+ * Proporciona operaciones de acceso a datos para gestionar usuarios, incluyendo
+ * operaciones CRUD básicas y búsquedas específicas como buscar por nombre de usuario.
+ * </p>
+ */
 public class UserRepository implements Repository<User> {
 
+    /**
+     * Guarda o actualiza un usuario en la base de datos.
+     *
+     * @param entity El usuario a guardar.
+     * @return El usuario persistido.
+     */
     @Override
     public User save(User entity) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
@@ -30,6 +43,12 @@ public class UserRepository implements Repository<User> {
         }
     }
 
+    /**
+     * Busca un usuario por su ID.
+     *
+     * @param id El identificador del usuario.
+     * @return Un {@link Optional} con el usuario encontrado.
+     */
     @Override
     public Optional<User> findById(Long id) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
@@ -40,6 +59,12 @@ public class UserRepository implements Repository<User> {
         }
     }
 
+    /**
+     * Busca un usuario por su nombre de usuario.
+     *
+     * @param nombreUsuario El nombre de usuario a buscar.
+     * @return Un {@link Optional} con el usuario si existe.
+     */
     public Optional<User> findByNombreUsuario(String nombreUsuario) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -52,6 +77,11 @@ public class UserRepository implements Repository<User> {
         }
     }
 
+    /**
+     * Recupera todos los usuarios registrados.
+     *
+     * @return Una lista de todos los usuarios.
+     */
     @Override
     public List<User> findAll() {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
@@ -62,6 +92,12 @@ public class UserRepository implements Repository<User> {
         }
     }
 
+    /**
+     * Elimina un usuario de la base de datos.
+     *
+     * @param entity El usuario a eliminar.
+     * @return Un {@link Optional} con el usuario eliminado si tuvo éxito.
+     */
     @Override
     public Optional<User> delete(User entity) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
@@ -79,11 +115,22 @@ public class UserRepository implements Repository<User> {
         }
     }
 
+    /**
+     * Elimina un usuario por su ID.
+     *
+     * @param id El identificador del usuario a eliminar.
+     * @return Un {@link Optional} con el usuario eliminado.
+     */
     @Override
     public Optional<User> deleteById(Long id) {
         return findById(id).flatMap(this::delete);
     }
 
+    /**
+     * Cuenta el número total de usuarios.
+     *
+     * @return El total de usuarios.
+     */
     @Override
     public Long count() {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();

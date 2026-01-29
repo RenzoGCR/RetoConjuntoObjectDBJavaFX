@@ -10,6 +10,13 @@ import pelicula.Pelicula;
 import user.UserService;
 import utils.JavaFXUtil;
 
+/**
+ * Controlador para el formulario de creación de nuevas películas.
+ * <p>
+ * Permite a los usuarios administradores introducir los datos de una nueva película
+ * y guardarla en la base de datos.
+ * </p>
+ */
 public class NewFilmFormController {
 
     @FXML private TextField tfTitulo;
@@ -22,12 +29,27 @@ public class NewFilmFormController {
 
     private final UserService userService = new UserService();
 
+    /**
+     * Cancela la operación de creación y vuelve a la vista principal.
+     *
+     * @param actionEvent El evento de acción generado por el botón "Cancelar".
+     */
     @FXML
     public void cancelar(ActionEvent actionEvent) {
         // Navegación con ruta simplificada
         JavaFXUtil.setScene("/main-view.fxml");
     }
 
+    /**
+     * Procesa la creación de una nueva película.
+     * <p>
+     * Valida que todos los campos obligatorios estén rellenos y que el año sea un número válido.
+     * Si la validación es correcta, crea un nuevo objeto {@link Pelicula} y lo persiste
+     * utilizando {@link UserService}.
+     * </p>
+     *
+     * @param actionEvent El evento de acción generado por el botón "Agregar".
+     */
     @FXML
     public void agregar(ActionEvent actionEvent) {
         String titulo = tfTitulo.getText();

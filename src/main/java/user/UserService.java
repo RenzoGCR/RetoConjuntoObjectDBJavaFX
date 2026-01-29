@@ -9,8 +9,27 @@ import session.JPAUtil;
 
 import java.util.List;
 
+/**
+ * Servicio de negocio para la gestión de usuarios y operaciones relacionadas con películas.
+ * <p>
+ * Encapsula la lógica de negocio compleja que involucra transacciones, relaciones entre entidades
+ * (Usuario, Película, Copia) y consultas específicas que van más allá de un simple CRUD.
+ * </p>
+ */
 public class UserService {
 
+    /**
+     * Asigna una copia disponible de una película a un usuario (alquiler).
+     * <p>
+     * Verifica si el usuario ya tiene una copia asignada. Si no, busca una copia disponible
+     * de la película solicitada y la asigna al usuario, cambiando su estado a "Alquilada".
+     * Todo el proceso se realiza dentro de una transacción.
+     * </p>
+     *
+     * @param actor    El usuario que realiza el alquiler.
+     * @param pelicula La película que se desea alquilar.
+     * @throws RuntimeException Si el usuario ya tiene un alquiler activo o no hay copias disponibles.
+     */
     public void addPeliculaOrCopia(User actor, Pelicula pelicula) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -46,6 +65,11 @@ public class UserService {
         }
     }
 
+    /**
+     * Recupera todas las películas disponibles en el catálogo.
+     *
+     * @return Una lista de todas las películas.
+     */
     public List<Pelicula> findAllPeliculas() {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -54,6 +78,17 @@ public class UserService {
             em.close();
         }
     }
+
+    /**
+     * Obtiene un usuario con sus dependencias cargadas (Copia asignada y Película asociada).
+     * <p>
+     * Utiliza {@code JOIN FETCH} para cargar ansiosamente (EAGER) las relaciones que normalmente son LAZY,
+     * evitando excepciones de inicialización perezosa fuera de la sesión.
+     * </p>
+     *
+     * @param userId El ID del usuario a buscar.
+     * @return El usuario con sus datos completos, o {@code null} si no se encuentra.
+     */
     public User getUserWithDependencies(Integer userId) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -77,6 +112,17 @@ public class UserService {
             em.close();
         }
     }
+
+    /**
+     * Elimina una película y gestiona sus copias asociadas.
+     * <p>
+     * Busca la película y la elimina. Debido a la configuración de cascada, las copias
+     * asociadas también deberían ser gestionadas según se haya definido en la entidad.
+     * </p>
+     *
+     * @param admin    El usuario administrador que realiza la acción (actualmente no se valida aquí, pero se pasa por contexto).
+     * @param pelicula La película a eliminar.
+     */
     public void removePeliculaOrCopia(User admin, Pelicula pelicula) {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -100,6 +146,14 @@ public class UserService {
             em.close();
         }
     }
+
+    /**
+     * Autentica a un usuario en el sistema.
+     *
+     * @param username El nombre de usuario.
+     * @param password La contraseña.
+     * @return El usuario autenticado si las credenciales son correctas, o {@code null} si no.
+     */
     public User login(String username, String password) {
         EntityManager em = session.JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -115,6 +169,12 @@ public class UserService {
             em.close();
         }
     }
+
+    /**
+     * Actualiza los datos de una película existente.
+     *
+     * @param p La película con los datos modificados.
+     */
     public void updatePelicula(Pelicula p) {
         EntityManager em = session.JPAUtil.getEntityManagerFactory().createEntityManager();
         try {
@@ -128,6 +188,13 @@ public class UserService {
             em.close();
         }
     }
+
+    /**
+     * Guarda una nueva película en la base de datos.
+     *
+     * @param nuevaPelicula La nueva película a persistir.
+     * @return La película guardada.
+     */
     public Pelicula savePelicula(Pelicula nuevaPelicula) {
         EntityManager em = session.JPAUtil.getEntityManagerFactory().createEntityManager();
         try {

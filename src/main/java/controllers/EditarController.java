@@ -15,6 +15,13 @@ import utils.JavaFXUtil;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controlador para la vista de edición de películas.
+ * <p>
+ * Permite a los usuarios administradores modificar los detalles de una película existente,
+ * como título, género, director, año y descripción.
+ * </p>
+ */
 public class EditarController implements Initializable {
 
     @FXML private TextField tfTitulo;
@@ -29,6 +36,16 @@ public class EditarController implements Initializable {
     private final UserService userService = new UserService();
     private Pelicula peliculaAEditar;
 
+    /**
+     * Inicializa el controlador.
+     * <p>
+     * Recupera la película seleccionada de la sesión y rellena los campos del formulario
+     * con sus datos actuales para ser editados.
+     * </p>
+     *
+     * @param url            La ubicación utilizada para resolver rutas relativas.
+     * @param resourceBundle Los recursos utilizados para la localización.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Recuperamos la película que el DetailController dejó en la sesión
@@ -39,6 +56,9 @@ public class EditarController implements Initializable {
         }
     }
 
+    /**
+     * Rellena los campos de texto de la interfaz con los datos de la película a editar.
+     */
     private void rellenarCampos() {
         tfTitulo.setText(peliculaAEditar.getTitulo());
         tfGenero.setText(peliculaAEditar.getGenero());
@@ -47,6 +67,15 @@ public class EditarController implements Initializable {
         taDescripcion.setText(peliculaAEditar.getDescripcion());
     }
 
+    /**
+     * Guarda los cambios realizados en la película.
+     * <p>
+     * Valida los datos introducidos, actualiza el objeto película y lo persiste en la base de datos
+     * a través del {@link UserService}. Muestra alertas de éxito o error según el resultado.
+     * </p>
+     *
+     * @param event El evento de acción generado por el botón "Guardar".
+     */
     @FXML
     void guardarCambios(ActionEvent event) {
         try {
@@ -72,6 +101,14 @@ public class EditarController implements Initializable {
         }
     }
 
+    /**
+     * Cancela la edición y vuelve a la vista principal.
+     * <p>
+     * Limpia la selección de película en la sesión antes de navegar.
+     * </p>
+     *
+     * @param event El evento de acción generado por el botón "Cancelar" o tras guardar.
+     */
     @FXML
     void volver(ActionEvent event) {
         // Limpiamos la película seleccionada para evitar conflictos futuros
